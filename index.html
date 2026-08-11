@@ -306,21 +306,6 @@
   .consent-check a{ color:var(--ink); border-bottom:1px solid var(--ink-dim); }
   .consent-check a:hover{ color:var(--amber); border-color:var(--amber); }
 
-  /* ---------- Aviso legal ---------- */
-  .legal-grid{
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:2px;
-    background:var(--line); border:1px solid var(--line); border-top:1px solid var(--line);
-  }
-  .legal-item{ background:var(--bg); padding:22px 24px; }
-  .legal-label{
-    font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
-    color:var(--ink-dim); display:block; margin-bottom:8px;
-  }
-  .legal-item p{ font-size:14px; color:var(--ink-muted); }
-  .legal-note{
-    margin-top:28px; font-size:12.5px; color:var(--ink-dim); line-height:1.7; max-width:820px;
-  }
-
   /* ---------- Footer ---------- */
   footer{ padding:48px 0 32px; border-top:1px solid var(--line); }
   .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
@@ -328,6 +313,32 @@
   .footer-links{ display:flex; gap:28px; font-size:13px; color:var(--ink-dim); flex-wrap:wrap; }
   .footer-links a:hover{ color:var(--ink); }
   .footer-copy{ margin-top:28px; font-family:var(--mono); font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.04em; }
+
+  /* ---------- WhatsApp flotante ---------- */
+  .whatsapp-float{
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    width:58px;
+    height:58px;
+    background:#25D366;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.35);
+    z-index:200;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .whatsapp-float:hover{
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 12px 30px rgba(0,0,0,0.45);
+  }
+  .whatsapp-float svg{ width:30px; height:30px; }
+  @media (max-width:600px){
+    .whatsapp-float{ width:52px; height:52px; bottom:18px; right:18px; }
+    .whatsapp-float svg{ width:27px; height:27px; }
+  }
 
   /* ---------- Responsive ---------- */
   @media (max-width:920px){
@@ -342,7 +353,6 @@
     .press-grid{ grid-template-columns:1fr; gap:40px; }
     .contact-grid{ grid-template-columns:1fr; gap:56px; }
     .field-row{ grid-template-columns:1fr; }
-    .legal-grid{ grid-template-columns:1fr 1fr; }
   }
   @media (max-width:600px){
     .wrap{ padding:0 20px; }
@@ -353,7 +363,6 @@
     .roster-grid{ grid-template-columns:1fr; }
     .process-grid{ grid-template-columns:1fr; }
     section{ padding:80px 0; }
-    .legal-grid{ grid-template-columns:1fr; }
   }
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
@@ -664,7 +673,7 @@
           <h2 style="margin-top:20px;">Cuéntanos tu<br>evento</h2>
           <p>Rellena el formulario con los datos de tu evento y te enviamos una propuesta con bandas disponibles y presupuesto en menos de 48h.</p>
           <div class="contact-details">
-            <a href="tel:+34600000000">+34 600 00 00 00</a>
+            <a href="tel:+34690877800">690 877 800</a>
             <a href="mailto:hola@ruidomusic.es">hola@ruidomusic.es</a>
           </div>
         </div>
@@ -727,42 +736,6 @@
     </div>
   </section>
 
-  <!-- AVISO LEGAL (Art. 10 LSSI) -->
-  <section id="aviso-legal" style="padding:80px 0;">
-    <div class="wrap">
-      <div class="section-head" style="margin-bottom:36px;">
-        <h2 style="font-size:clamp(28px,4vw,40px);">Aviso legal</h2>
-        <p>Identificación del titular de esta web, conforme al artículo 10 de la Ley 34/2002, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE).</p>
-      </div>
-      <div class="legal-grid">
-        <div class="legal-item">
-          <span class="legal-label">Denominación social</span>
-          <p>Asociación Musical BRB</p>
-        </div>
-        <div class="legal-item">
-          <span class="legal-label">NIF / CIF</span>
-          <p>G19421932</p>
-        </div>
-        <div class="legal-item">
-          <span class="legal-label">Domicilio</span>
-          <p>C/ Playa de Riazor, nº 22, Planta 1, Puerta A · 28042 Madrid (Madrid)</p>
-        </div>
-        <div class="legal-item">
-          <span class="legal-label">Contacto</span>
-          <p>hola@ruidomusic.es · +34 600 00 00 00</p>
-        </div>
-        <div class="legal-item">
-          <span class="legal-label">Registro</span>
-          <p>Registro Nacional de Asociaciones · Grupo 1, Sección 1, Nº Nacional 629242</p>
-        </div>
-        <div class="legal-item">
-          <span class="legal-label">Representante legal</span>
-          <p>Félix del Barrio Cruz (Presidente)</p>
-        </div>
-      </div>
-      <p class="legal-note">
-        Los datos personales facilitados a través del formulario de esta web (nombre, email y demás datos del evento) se tratan con la única finalidad de responder a tu solicitud de presupuesto, conforme al Reglamento (UE) 2016/679 (RGPD) y la LOPDGDD. No se ceden a terceros salvo obligación legal. Puedes ejercer tus derechos de acceso, rectificación, supresión y demás derechos reconocidos por la normativa escribiendo a hola@ruidomusic.es.
-      </p>
     </div>
   </section>
 
@@ -777,13 +750,20 @@
         <a href="#bandas">Bandas</a>
         <a href="#como-funciona">Cómo funciona</a>
         <a href="#contacto">Contacto</a>
-        <a href="#aviso-legal">Aviso legal</a>
+        <a href="aviso-legal.html">Aviso legal</a>
         <a href="privacidad.html">Política de privacidad</a>
       </div>
     </div>
     <p class="footer-copy">© 2026 RUIDO Music · Bandas de versiones para bodas y eventos</p>
   </div>
 </footer>
+
+<a href="https://wa.me/34690877800?text=Hola%2C%20quiero%20pedir%20presupuesto%20para%20un%20evento" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="#fff"/>
+    <path d="M12.01 2C6.486 2 2 6.477 2 11.99c0 1.996.586 3.855 1.6 5.415L2 22l4.71-1.552A9.96 9.96 0 0012.01 22C17.534 22 22 17.523 22 12.01 22 6.477 17.534 2 12.01 2zm0 18.2a8.17 8.17 0 01-4.408-1.284l-.316-.19-3.006.99.997-2.93-.207-.327A8.15 8.15 0 013.81 12c0-4.522 3.68-8.2 8.2-8.2 4.522 0 8.2 3.678 8.2 8.2 0 4.522-3.678 8.2-8.2 8.2z" fill="#fff"/>
+  </svg>
+</a>
 
 <script>
   const toggle = document.querySelector('.nav-toggle');
