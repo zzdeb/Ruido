@@ -156,12 +156,17 @@
   .service-card p{ font-size:14px; color:var(--ink-muted); line-height:1.6; }
 
   /* ---------- Bandas disponibles ---------- */
-  .roster-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:2px; background:var(--line); border:1px solid var(--line); }
+  .roster-grid{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:2px; background:var(--line); border:1px solid var(--line); }
   .band-card{
     background:var(--bg); padding:36px 28px 28px; min-height:200px;
     display:flex; flex-direction:column; justify-content:space-between;
     position:relative; overflow:hidden; transition:background .25s ease;
   }
+  .band-logo{
+    height:104px; display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px; padding:12px; background:var(--surface); border:1px solid var(--line);
+  }
+  .band-logo img{ max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; }
   .band-card::before{
     content:""; position:absolute; inset:0;
     background:radial-gradient(circle at 85% 15%, var(--magenta), transparent 55%);
@@ -170,7 +175,7 @@
   .band-card:hover::before{ opacity:0.16; }
   .band-genre{ font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); }
   .band-card h3{ font-size:28px; margin-top:14px; position:relative; z-index:1; }
-  .band-links{ display:flex; gap:18px; align-items:center; margin-top:22px; position:relative; z-index:1; }
+  .band-links{ display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; margin-top:22px; position:relative; z-index:1; }
   .band-link{
     font-family:var(--mono); font-size:12px; letter-spacing:0.04em; text-transform:uppercase;
     color:var(--amber); display:inline-block;
