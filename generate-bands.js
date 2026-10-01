@@ -14,8 +14,7 @@ const CUSTOM_BANDS = [
     Descripcion: 'Elige tu repertorio de versiones, o tu tributo favorito. Nosotros ponemos los músicos y conformamos la banda para ti.',
     Setlist: 'Versión a medida\nTributo favorito\nTu set ideal',
     Instagram: '',
-    Youtube: '',
-    Logo: ''
+    Youtube: ''
   }
 ];
 
@@ -28,35 +27,6 @@ function escapeHtml(value = '') {
     .replace(/'/g, '&#039;');
 }
 
-function normalizeKey(value = '') {
-  return String(value)
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
-}
-
-function pickFirstValue(raw = {}, aliases = []) {
-  const normalizedAliases = aliases.map(normalizeKey);
-
-  for (const [key, value] of Object.entries(raw || {})) {
-    const normalizedKey = normalizeKey(key);
-    if (normalizedAliases.includes(normalizedKey)) {
-      if (value !== undefined && value !== null && String(value).trim() !== '') {
-        return value;
-      }
-    }
-  }
-
-  for (const value of Object.values(raw || {})) {
-    if (value && typeof value === 'object') {
-      const nested = pickFirstValue(value, aliases);
-      if (nested) return nested;
-    }
-  }
-
-  return '';
-}
-
 function normalizeBand(raw = {}) {
   const get = (...keys) => {
     for (const key of keys) {
@@ -66,66 +36,14 @@ function normalizeBand(raw = {}) {
     return '';
   };
 
-  const logoValue = pickFirstValue(raw, [
-    'Logo',
-    'logo',
-    'Logo link',
-    'logo link',
-    'logo_link',
-    'logo-link',
-    'logolink',
-    'Logo URL',
-    'logo url',
-    'logo_url',
-    'url_logo',
-    'link_logo',
-    'LogoLink',
-    'logoLink',
-    'imagen',
-    'image',
-    'Image',
-    'img',
-    'url'
-  ]);
-
   return {
     Nombre: get('Nombre', 'nombre', 'name', 'banda', 'titulo') || 'Banda',
     estilo: get('estilo', 'style', 'genre', 'categoria', 'genero') || 'Covers',
     Descripcion: get('Descripcion', 'descripcion', 'description', 'bio', 'texto') || 'Repertorio disponible bajo demanda.',
     Setlist: get('Setlist', 'setlist', 'repertorio', 'songs', 'canciones', 'lista') || '',
     Instagram: get('Instagram', 'instagram', 'ig', 'instagram_url') || '',
-    Youtube: get('Youtube', 'youtube', 'youtube_url', 'link_youtube') || '',
-    Logo: normalizeLogoUrl(get(
-      'Logo',
-      'logo',
-      'Logo link',
-      'logo link',
-      'Logo URL',
-      'logo_url',
-      'url_logo',
-      'imagen',
-      'image',
-      'LogoLink',
-      'logoLink'
-    )) || normalizeLogoUrl(logoValue)
+    Youtube: get('Youtube', 'youtube', 'youtube_url', 'link_youtube') || ''
   };
-}
-
-function normalizeLogoUrl(value) {
-  const url = String(value || '').trim();
-  if (!url) return '';
-
-  const driveId = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([^/?&]+)/);
-  if (driveId) return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(driveId[1])}`;
-
-  try {
-    const hostname = new URL(url).hostname.toLowerCase();
-    if (hostname === 'instagram.com' || hostname === 'www.instagram.com') return '';
-  } catch (err) {
-    return '';
-  }
-
-  return url;
 }
 
 function renderSongList(setlist) {
@@ -143,9 +61,6 @@ function renderSongList(setlist) {
 }
 
 function renderBandCard(banda) {
-  const logo = banda.Logo
-    ? `<div class="band-logo"><img src="${escapeHtml(banda.Logo)}" alt="Logo de ${escapeHtml(banda.Nombre)}" loading="lazy" decoding="async"></div>`
-    : '';
   const instagram = banda.Instagram
     ? `<a href="${banda.Instagram}" target="_blank" rel="noopener" class="band-link-secondary">Instagram</a>`
     : '<span class="band-link-secondary" style="cursor:default;">Instagram próx.</span>';
@@ -157,7 +72,6 @@ function renderBandCard(banda) {
   return `
     <article class="band-card">
       <div>
-        ${logo}
         <span class="band-genre">${escapeHtml(banda.estilo)}</span>
         <h3>${escapeHtml(banda.Nombre)}</h3>
         <details class="band-repertoire">
@@ -243,15 +157,6 @@ function loadJson(url, redirects = 0) {
 async function main() {
   const response = await loadJson(ENDPOINT);
   const rawBands = Array.isArray(response) ? response : (response.bandas || response.rows || response.data || []);
-  const hasLogoColumn = rawBands.some(item =>
-    Object.keys(item).some(key => {
-      const normalized = key.trim().toLowerCase();
-      return ['logo', 'logo url', 'logo_url', 'url_logo', 'link_logo', 'logo link', 'logo_link', 'logolink', 'logo-link', 'imagen', 'image', 'img'].includes(normalized);
-    })
-  );
-  if (!hasLogoColumn) {
-    console.warn('El JSON de Apps Script no incluye ninguna columna de logo visible. Se continuará si el dato se entrega con otro nombre o si la fila está vacía.');
-  }
 
   const bandas = [
     ...rawBands.map(item => normalizeBand(item)),
