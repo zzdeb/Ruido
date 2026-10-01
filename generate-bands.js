@@ -7,6 +7,17 @@ const ENDPOINT = 'https://script.google.com/macros/s/AKfycby_CxI8EoSA7VIkb2VmbEw
 const FILE_PATH = path.join(__dirname, 'index.html');
 const START_MARKER = '<!-- BANDAS_STATIC_START -->';
 const END_MARKER = '<!-- BANDAS_STATIC_END -->';
+const CUSTOM_BANDS = [
+  {
+    Nombre: 'Tu banda a medida',
+    estilo: 'Personalizada',
+    Descripcion: 'Elige tu repertorio de versiones, o tu tributo favorito. Nosotros ponemos los músicos y conformamos la banda para ti.',
+    Setlist: 'Versión a medida\nTributo favorito\nTu set ideal',
+    Instagram: '',
+    Youtube: '',
+    Logo: ''
+  }
+];
 
 function escapeHtml(value = '') {
   return String(value)
@@ -33,7 +44,19 @@ function normalizeBand(raw = {}) {
     Setlist: get('Setlist', 'setlist', 'repertorio', 'songs', 'canciones', 'lista') || '',
     Instagram: get('Instagram', 'instagram', 'ig', 'instagram_url') || '',
     Youtube: get('Youtube', 'youtube', 'youtube_url', 'link_youtube') || '',
-    Logo: normalizeLogoUrl(get('Logo', 'logo', 'Logo URL', 'logo_url', 'url_logo', 'imagen', 'image'))
+    Logo: normalizeLogoUrl(get(
+      'Logo',
+      'logo',
+      'Logo link',
+      'logo link',
+      'Logo URL',
+      'logo_url',
+      'url_logo',
+      'imagen',
+      'image',
+      'LogoLink',
+      'logoLink'
+    ))
   };
 }
 
@@ -163,15 +186,19 @@ async function main() {
   const response = await loadJson(ENDPOINT);
   const rawBands = Array.isArray(response) ? response : (response.bandas || response.rows || response.data || []);
   const hasLogoColumn = rawBands.some(item =>
-    Object.keys(item).some(key => ['logo', 'logo url', 'logo_url', 'url_logo', 'imagen', 'image'].includes(key.trim().toLowerCase()))
+    Object.keys(item).some(key => {
+      const normalized = key.trim().toLowerCase();
+      return ['logo', 'logo url', 'logo_url', 'url_logo', 'logo link', 'logo_link', 'logo link', 'imagen', 'image'].includes(normalized);
+    })
   );
   if (!hasLogoColumn) {
-    throw new Error('El JSON de Apps Script no incluye la columna Logo. Añádela a la lista de columnas públicas del Apps Script y vuelve a implementar el deployment.');
+    console.warn('El JSON de Apps Script no incluye ninguna columna de logo visible. Se continuará si el dato se entrega con otro nombre o si la fila está vacía.');
   }
 
-  const bandas = rawBands
-    .map(item => normalizeBand(item))
-    .filter(item => item.Nombre && item.Nombre !== 'Banda');
+  const bandas = [
+    ...rawBands.map(item => normalizeBand(item)),
+    ...CUSTOM_BANDS.map(item => normalizeBand(item))
+  ].filter(item => item.Nombre && item.Nombre !== 'Banda');
 
   const block = bandas.map(renderBandCard).join('\n');
 
