@@ -80,7 +80,17 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:18px 32px; max-width:1180px; margin:0 auto;
   }
-  .logo{ font-family:var(--display); font-size:24px; letter-spacing:0.04em; text-transform:uppercase; }
+  .logo{
+    font-family:var(--display); font-size:24px; letter-spacing:0.04em; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:12px;
+  }
+  .logo::before{
+    content:""; width:12px; height:12px; border-radius:3px;
+    background:linear-gradient(135deg, var(--amber), var(--magenta));
+    box-shadow:0 0 0 2px rgba(255,138,61,0.18), 0 0 18px rgba(230,57,146,0.25);
+    transform:rotate(45deg);
+    flex-shrink:0;
+  }
   .logo span{ color:var(--amber); }
   .nav-links{ display:flex; gap:36px; font-size:14px; letter-spacing:0.02em; }
   .nav-links a{ color:var(--ink-muted); transition:color .2s ease; }
@@ -156,12 +166,26 @@
   .service-card p{ font-size:14px; color:var(--ink-muted); line-height:1.6; }
 
   /* ---------- Bandas disponibles ---------- */
-  .roster-grid{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:2px; background:var(--line); border:1px solid var(--line); }
+  .roster-grid{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "band1 band2 ."
+      "band3 band4 band5";
+    gap:2px; background:var(--line); border:1px solid var(--line);
+    justify-items:stretch;
+  }
   .band-card{
     background:var(--bg); padding:36px 28px 28px; min-height:200px;
     display:flex; flex-direction:column; justify-content:space-between;
     position:relative; overflow:hidden; transition:background .25s ease;
   }
+  .band-card:nth-child(1){ grid-area:band1; }
+  .band-card:nth-child(2){ grid-area:band2; }
+  .band-card:nth-child(3){ grid-area:band3; }
+  .band-card:nth-child(4){ grid-area:band4; }
+  .band-card:nth-child(5){ grid-area:band5; }
+  .band-card:nth-child(5){ justify-self:center; width:calc(100% - 2px); }
   .band-logo{
     height:104px; display:flex; align-items:center; justify-content:center;
     margin-bottom:22px; padding:12px; background:var(--surface); border:1px solid var(--line);
@@ -173,7 +197,10 @@
     opacity:0; transition:opacity .3s ease; pointer-events:none;
   }
   .band-card:hover::before{ opacity:0.16; }
-  .band-genre{ font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); }
+  .band-genre{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink-dim); display:block; line-height:1.4; max-width:18ch;
+  }
   .band-card h3{ font-size:28px; margin-top:14px; position:relative; z-index:1; }
   .band-links{ display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; margin-top:22px; position:relative; z-index:1; }
   .band-link{
@@ -353,7 +380,7 @@
     .service-grid.cols-4{ grid-template-columns:1fr 1fr; }
     .service-grid.cols-5{ grid-template-columns:1fr 1fr; }
     .service-card{ border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
-    .roster-grid{ grid-template-columns:1fr 1fr; }
+    .roster-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-areas:"band1 band2" "band3 band4" "band5 band5"; }
     .process-grid{ grid-template-columns:1fr 1fr; }
     .press-grid{ grid-template-columns:1fr; gap:40px; }
     .contact-grid{ grid-template-columns:1fr; gap:56px; }
@@ -365,7 +392,7 @@
     .hero{ padding-top:120px; }
     .hero-meta{ gap:32px; }
     .service-grid.cols-3, .service-grid.cols-4, .service-grid.cols-5{ grid-template-columns:1fr; }
-    .roster-grid{ grid-template-columns:1fr; }
+    .roster-grid{ grid-template-columns:1fr; grid-template-areas:"band1" "band2" "band3" "band4" "band5"; }
     .process-grid{ grid-template-columns:1fr; }
     section{ padding:80px 0; }
   }
@@ -488,7 +515,7 @@
 
     <article class="band-card">
       <div>
-        
+        <div class="band-logo"><img src="https://scontent-mad2-1.cdninstagram.com/v/t51.82787-19/625139899_17928800967195921_1616386805022288747_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&amp;_nc_ht=scontent-mad2-1.cdninstagram.com&amp;_nc_cat=109&amp;_nc_oc=Q6cZ2gF8UElgISfKswZodv6meK5Nw9j1rDrIt7Mqpgk2f-EiAnIHf60-N-9LO4KaqcRtoJri1Qe_6arSVDaZkG3fR0kc&amp;_nc_ohc=p3y59CA9J4IQ7kNvwGbwZwh&amp;_nc_gid=ffSLHP49q2BwYPnVAqDBeg&amp;edm=APs17CUBAAAA&amp;ccb=7-5&amp;oh=00_AQOY149d_QHJm_yD1wA8qgFu7Ygm1nLaXCT0IxWqucqg4w&amp;oe=6AC2CE60&amp;_nc_sid=10d13b" alt="Logo de Big Rock Band" loading="lazy" decoding="async"></div>
         <span class="band-genre">Covers rock · 20 músicos en escena</span>
         <h3>Big Rock Band</h3>
         <details class="band-repertoire">
@@ -509,7 +536,7 @@
 
     <article class="band-card">
       <div>
-        
+        <div class="band-logo"><img src="https://scontent-mad2-1.cdninstagram.com/v/t51.82787-19/812373461_18123785896667128_1698873432025887136_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby43NjguYzIifQ&amp;_nc_ht=scontent-mad2-1.cdninstagram.com&amp;_nc_cat=104&amp;_nc_oc=Q6cZ2gH9PgJIPFMy8FRUd-RyvG-TMK4Qc8je69CEZwo6OV1FnffHO0mCh-6njA2hwD20XpsBxqDLBgiE6JT9a78B4-14&amp;_nc_ohc=aX6_hEcscPEQ7kNvwHx0cA4&amp;_nc_gid=rNDq2pPknoRnZ6gXoCnXfw&amp;edm=APs17CUBAAAA&amp;ccb=7-5&amp;oh=00_AQM-loTH2laozt2VMMig1p6UIOKVLGL9ffVKONSa-A0Hrw&amp;oe=6AC2DEAF&amp;_nc_sid=10d13b" alt="Logo de The Coconuts" loading="lazy" decoding="async"></div>
         <span class="band-genre">Rock covers internacionales</span>
         <h3>The Coconuts</h3>
         <details class="band-repertoire">
@@ -530,7 +557,7 @@
 
     <article class="band-card">
       <div>
-        
+        <div class="band-logo"><img src="https://scontent-mad2-1.cdninstagram.com/v/t51.82787-19/821223540_18118319617823922_4353228597030074127_n.jpg?_nc_cat=104&amp;ccb=7-5&amp;_nc_sid=bf7eb4&amp;efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&amp;_nc_ohc=5ykxwzw6ieUQ7kNvwHzgUR5&amp;_nc_oc=AdqLnqcHV3dhZnu1L2GHWtB3kAH880XFFBv4w-Ig_6wt28gCGB4PRutPMoPtmKZYJ1Cy3Ni1xkIlthtgAwXyuDx2&amp;_nc_zt=24&amp;_nc_ht=scontent-mad2-1.cdninstagram.com&amp;_nc_gid=FKB0mLhoKaujAUaULKiJvw&amp;_nc_ss=7b6a8&amp;oh=00_AQOGbXnr1vFPRd_HFaYXHqAU-IT3SFAyHuMcj5Paw_LCkg&amp;oe=6AC2E510" alt="Logo de Indie Laupers" loading="lazy" decoding="async"></div>
         <span class="band-genre">Covers indie en español</span>
         <h3>Indie Laupers</h3>
         <details class="band-repertoire">

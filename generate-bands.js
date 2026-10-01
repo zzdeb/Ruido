@@ -3,7 +3,7 @@ const path = require('path');
 const https = require('https');
 const zlib = require('zlib');
 
-const ENDPOINT = 'https://script.google.com/macros/s/AKfycby_CxI8EoSA7VIkb2VmbEwF1lCCKU8zVZO2H18_n_04HjT9PmgoLPATMGWS2QaVDzPA5g/exec';
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbylHfGRyeWvKP11ImffiZT8JOXQl2YJ28sFtmgHSJ5t8oYSH1dDYNPkffawlFXuEl-asw/exec';
 const FILE_PATH = path.join(__dirname, 'index.html');
 const START_MARKER = '<!-- BANDAS_STATIC_START -->';
 const END_MARKER = '<!-- BANDAS_STATIC_END -->';
@@ -28,6 +28,35 @@ function escapeHtml(value = '') {
     .replace(/'/g, '&#039;');
 }
 
+function normalizeKey(value = '') {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function pickFirstValue(raw = {}, aliases = []) {
+  const normalizedAliases = aliases.map(normalizeKey);
+
+  for (const [key, value] of Object.entries(raw || {})) {
+    const normalizedKey = normalizeKey(key);
+    if (normalizedAliases.includes(normalizedKey)) {
+      if (value !== undefined && value !== null && String(value).trim() !== '') {
+        return value;
+      }
+    }
+  }
+
+  for (const value of Object.values(raw || {})) {
+    if (value && typeof value === 'object') {
+      const nested = pickFirstValue(value, aliases);
+      if (nested) return nested;
+    }
+  }
+
+  return '';
+}
+
 function normalizeBand(raw = {}) {
   const get = (...keys) => {
     for (const key of keys) {
@@ -36,6 +65,28 @@ function normalizeBand(raw = {}) {
     }
     return '';
   };
+
+  const logoValue = pickFirstValue(raw, [
+    'Logo',
+    'logo',
+    'Logo link',
+    'logo link',
+    'logo_link',
+    'logo-link',
+    'logolink',
+    'Logo URL',
+    'logo url',
+    'logo_url',
+    'url_logo',
+    'link_logo',
+    'LogoLink',
+    'logoLink',
+    'imagen',
+    'image',
+    'Image',
+    'img',
+    'url'
+  ]);
 
   return {
     Nombre: get('Nombre', 'nombre', 'name', 'banda', 'titulo') || 'Banda',
@@ -56,7 +107,7 @@ function normalizeBand(raw = {}) {
       'image',
       'LogoLink',
       'logoLink'
-    ))
+    )) || normalizeLogoUrl(logoValue)
   };
 }
 
@@ -66,6 +117,13 @@ function normalizeLogoUrl(value) {
 
   const driveId = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([^/?&]+)/);
   if (driveId) return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(driveId[1])}`;
+
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    if (hostname === 'instagram.com' || hostname === 'www.instagram.com') return '';
+  } catch (err) {
+    return '';
+  }
 
   return url;
 }
@@ -188,7 +246,7 @@ async function main() {
   const hasLogoColumn = rawBands.some(item =>
     Object.keys(item).some(key => {
       const normalized = key.trim().toLowerCase();
-      return ['logo', 'logo url', 'logo_url', 'url_logo', 'logo link', 'logo_link', 'logo link', 'imagen', 'image'].includes(normalized);
+      return ['logo', 'logo url', 'logo_url', 'url_logo', 'link_logo', 'logo link', 'logo_link', 'logolink', 'logo-link', 'imagen', 'image', 'img'].includes(normalized);
     })
   );
   if (!hasLogoColumn) {
