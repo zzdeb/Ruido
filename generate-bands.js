@@ -161,7 +161,9 @@ async function main() {
   const bandas = [
     ...rawBands.map(item => normalizeBand(item)),
     ...CUSTOM_BANDS.map(item => normalizeBand(item))
-  ].filter(item => item.Nombre && item.Nombre !== 'Banda');
+  ].filter(item => item.Nombre
+    && item.Nombre !== 'Banda'
+    && !/^(?:(?:asociaci[oó]n\s+musical\s+)?(?:big\s*rock\s*band|brb))$/i.test(item.Nombre.trim()));
 
   const block = bandas.map(renderBandCard).join('\n');
 
